@@ -1,0 +1,35 @@
+% !TEX root = ../main.tex
+\section{Introducción}
+
+La minería de datos articula un conjunto de técnicas computacionales orientadas a descubrir patrones útiles en grandes volúmenes de información, conjugando estadística, aprendizaje automático y visualización \citep{hankamber2011data,witten2016data}. En su modalidad no supervisada, la disciplina busca estructura latente sin disponer de etiquetas: el clustering es su instancia canónica.
+
+El dataset \emph{Palmer Penguins} \citep{horst2020palmer,gorman2014ecological} se ha consolidado como una alternativa moderna al clásico \emph{Iris}, debido a que ofrece características físicas de tres especies de pingüinos (\emph{Adelie}, \emph{Chinstrap} y \emph{Gentoo}) en tres islas del archipiélago Palmer (Antártida). Su tamaño compacto, su licencia abierta y la presencia controlada de valores faltantes y solapamiento entre especies lo convierten en un banco de pruebas ideal para enseñar y comparar algoritmos de clustering en un contexto reproducible.
+
+\section{Planteamiento del problema}
+
+Los enfoques supervisados de clasificación requieren etiquetas, las cuales no siempre están disponibles --- por ejemplo, en biología de campo o en estudios exploratorios. La pregunta de investigación de este proyecto es:
+
+\begin{quote}
+\emph{¿Es posible recuperar la estructura natural de las tres especies de pingüinos del archipiélago Palmer a partir únicamente de variables morfométricas (longitud y profundidad del pico, longitud de la aleta y masa corporal) mediante algoritmos de clustering no supervisado, y qué algoritmo lo hace mejor?}
+\end{quote}
+
+La hipótesis es que algoritmos sensibles a la geometría global del espacio de características (K-Means y Agglomerative con linkage de Ward) recuperarán mejor la partición real que algoritmos basados puramente en densidad local (DBSCAN), debido a que las especies presentan tamaños de grupo similares y no exhiben densidades drásticamente distintas.
+
+\section{Objetivo general}
+
+Diseñar, ejecutar y reportar un experimento de minería de datos --- siguiendo prácticas de Ciencia 2.0 --- que compare K-Means, DBSCAN y Agglomerative Clustering sobre el dataset Palmer Penguins, evaluando con métricas interna (Silhouette) y externa (Adjusted Rand Index) la calidad de la agrupación obtenida.
+
+\section{Objetivos específicos}
+
+\begin{itemize}
+  \item Realizar el análisis exploratorio de datos (EDA) con estadísticas descriptivas, distribución por clase, valores faltantes y correlaciones.
+  \item Diseñar un pipeline de preprocesamiento que elimine \texttt{NaN} y estandarice las variables numéricas mediante \texttt{StandardScaler}.
+  \item Ajustar y comparar K-Means, DBSCAN y Agglomerative Clustering con hiperparámetros explícitamente documentados.
+  \item Calcular y reportar Silhouette Score y Adjusted Rand Index para los tres modelos.
+  \item Visualizar los clusters obtenidos sobre la proyección PCA bidimensional y construir la matriz de confusión del mejor algoritmo.
+  \item Publicar todos los artefactos (notebook, dataset, requirements, README, presentación, figuras) en un repositorio reproducible.
+\end{itemize}
+
+\section{Estructura del documento}
+
+El reporte se organiza en seis secciones principales y dos apéndices. La sección~2 establece el marco teórico de los algoritmos y las métricas. La sección~3 describe la metodología y el pipeline de minería de datos. La sección~4 detalla los experimentos. La sección~5 presenta los resultados con tablas y figuras. La sección~6 concluye con limitaciones y trabajo futuro. El apéndice~\ref{ap:codigo} contiene los fragmentos esenciales de código y el apéndice~\ref{ap:reproducibilidad} la checklist de reproducibilidad de Ciencia 2.0.

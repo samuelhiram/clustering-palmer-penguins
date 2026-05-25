@@ -1,0 +1,49 @@
+% !TEX root = ../main.tex
+\section{Marco teórico}
+
+\subsection{Minería de datos y aprendizaje no supervisado}
+
+La minería de datos se define como el proceso no trivial de extracción de patrones válidos, novedosos, potencialmente útiles y comprensibles a partir de los datos \citep{fayyad1996kdd}. Dentro del aprendizaje automático, se distinguen tres familias: supervisado (con etiquetas), no supervisado (sin etiquetas) y semi-supervisado. El \emph{clustering} pertenece a la segunda y busca particionar el conjunto $X = \{x_1, \dots, x_n\}$, $x_i \in \mathbb{R}^d$, en $k$ subconjuntos $C_1, \dots, C_k$ que maximicen la similitud intra-cluster y minimicen la similitud inter-cluster \citep{jain1999data,jain2010clustering}.
+
+\subsection{K-Means}
+
+K-Means \citep{macqueen1967some,lloyd1982least} minimiza la suma de cuadrados intra-cluster (SSE o inercia):
+\begin{equation}
+\mathcal{J}(C_1,\dots,C_k) = \sum_{j=1}^{k} \sum_{x_i \in C_j} \|x_i - \mu_j\|_2^2,
+\label{eq:kmeans}
+\end{equation}
+donde $\mu_j$ es el centroide del cluster $j$. El algoritmo de Lloyd alterna dos pasos: asignación de cada $x_i$ al centroide más cercano y recálculo de los centroides como medias de sus miembros, hasta convergencia. Es eficiente ($\mathcal{O}(nkt)$ para $t$ iteraciones) pero presenta tres limitaciones bien conocidas: requiere fijar $k$ a priori, es sensible a la inicialización (mitigado con \emph{k-means++} \citep{arthur2007kmeanspp}) y asume clusters convexos de tamaño similar.
+
+\subsection{DBSCAN}
+
+DBSCAN (\emph{Density-Based Spatial Clustering of Applications with Noise}) \citep{ester1996density} construye clusters como regiones de alta densidad separadas por regiones de baja densidad. Define un punto como \emph{núcleo} si tiene al menos \texttt{min\_samples} vecinos dentro de un radio \texttt{eps}; los clusters son componentes conexas de núcleos densamente conectados, y los puntos no alcanzables se etiquetan como ruido ($-1$). Sus ventajas son la detección automática del número de clusters y la robustez al ruido; sus desventajas son la sensibilidad al par $(\varepsilon, \text{minPts})$ y la dificultad de manejar densidades heterogéneas.
+
+\subsection{Agglomerative Clustering}
+
+El clustering jerárquico aglomerativo \citep{ward1963hierarchical,murtagh1983survey} parte con cada observación como su propio cluster y fusiona iterativamente el par más cercano, según un criterio de \emph{linkage}. Con linkage de Ward, en cada paso se fusiona la pareja $(A,B)$ que minimiza el incremento de la suma de cuadrados:
+\begin{equation}
+\Delta(A,B) = \frac{|A|\,|B|}{|A|+|B|}\,\|\mu_A - \mu_B\|_2^2 .
+\label{eq:ward}
+\end{equation}
+Este criterio favorece clusters compactos y de varianza homogénea, característica que se ajusta bien al dataset Palmer Penguins una vez estandarizado.
+
+\subsection{Métricas de evaluación}
+
+\paragraph{Silhouette Score \citep{rousseeuw1987silhouettes}.}
+Para cada observación $x_i$ asignada al cluster $C_j$ se define
+\begin{equation}
+s(x_i) = \frac{b(x_i) - a(x_i)}{\max\{a(x_i), b(x_i)\}}, \qquad s(x_i)\in[-1,1],
+\label{eq:silhouette}
+\end{equation}
+donde $a(x_i)$ es la distancia promedio de $x_i$ a los demás puntos de su cluster y $b(x_i)$ es la mínima distancia promedio de $x_i$ a otro cluster. Valores cercanos a 1 indican una asignación coherente; cercanos a 0 indican frontera; negativos sugieren mal asignación.
+
+\paragraph{Adjusted Rand Index \citep{rand1971objective,hubert1985comparing}.}
+Compara una partición candidata $U$ con una partición de referencia $V$ contando los pares de observaciones que coinciden o difieren en ambas particiones, y ajusta el índice de Rand para que tome el valor esperado 0 bajo asignación aleatoria. Rango $[-1,1]$: 1 indica coincidencia perfecta. En este proyecto el ARI se calcula contra la etiqueta verdadera de especie (no usada en el entrenamiento).
+
+\subsection{Reducción de dimensionalidad por PCA}
+
+El \emph{Análisis de Componentes Principales} \citep{pearson1901pca,jolliffe2002principal} proyecta los datos en las direcciones de máxima varianza. En este trabajo se utiliza únicamente con fines visuales: la geometría de los clusters en $\mathbb{R}^4$ se proyecta a $\mathbb{R}^2$ para inspección.
+
+\subsection{Ciencia 2.0 y reproducibilidad}
+
+La práctica de Ciencia 2.0 \citep{shneiderman2008science20,wilkinson2016fair} establece que los productos de investigación deben ser \emph{abiertos, citables, ejecutables y verificables} por terceros. En este proyecto se materializa fijando \texttt{RANDOM\_STATE} = 42, declarando versiones exactas en \texttt{requirements.txt}, alojando el dataset bajo licencia CC-0 y entregando un notebook reproducible \citep{kluyver2016jupyter}.

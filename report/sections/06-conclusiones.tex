@@ -1,0 +1,41 @@
+% !TEX root = ../main.tex
+\section{Conclusiones}
+
+Se aplicó un flujo completo de minería de datos sobre el dataset Palmer Penguins comparando tres algoritmos de clustering no supervisado. La hipótesis inicial --- que algoritmos sensibles a la geometría global recuperarían mejor la estructura biológica que algoritmos basados en densidad --- queda confirmada por las métricas: Agglomerative Clustering con linkage de Ward obtiene un ARI de 0.916, K-Means un ARI de 0.793 y DBSCAN un ARI de 0.584.
+
+El dataset resultó ideal para el ejercicio docente: tamaño manejable, tres especies bien definidas, presencia controlada de valores faltantes y suficiente solapamiento entre \emph{Adelie} y \emph{Chinstrap} como para que los algoritmos tengan que esforzarse. La estandarización previa de las cuatro variables fue clave; sin ella, \texttt{body\_mass\_g} (en gramos) dominaría las distancias frente a \texttt{bill\_depth\_mm} (en milímetros).
+
+\subsection{Aportes del proyecto}
+
+\begin{itemize}
+  \item Notebook reproducible \texttt{notebook.ipynb} ejecutable en Jupyter local y en Google Colab sin pasos manuales.
+  \item Comparativa cuantitativa de tres algoritmos con dos métricas complementarias --- interna y externa --- sobre el mismo pipeline.
+  \item Cinco figuras vectoriales generadas por el propio notebook: pairplot, matriz de correlación, método del codo, proyección PCA y matriz de confusión.
+  \item Presentación PowerPoint (5 diapositivas según rúbrica) generada programáticamente y sincronizada con las métricas del notebook.
+  \item Repositorio organizado siguiendo Ciencia 2.0 (README, requirements, datos versionados, semillas fijadas).
+\end{itemize}
+
+\subsection{Limitaciones}
+
+\begin{itemize}
+  \item Sólo se usaron las cuatro variables numéricas. Las variables categóricas \texttt{sex} e \texttt{island} contienen información discriminante (por ejemplo, las islas de Gentoo y Chinstrap son disjuntas) y podrían mejorar la separación tras encoding.
+  \item Los hiperparámetros de DBSCAN se fijaron a un valor estándar; una búsqueda fina con la curva $k$-distance probablemente lo equipararía a K-Means en este dataset.
+  \item No se midió la estabilidad de los clusters frente a remuestreo. Un análisis con \emph{bootstrap} reforzaría la validez de los resultados \citep{hennig2007cluster}.
+\end{itemize}
+
+\subsection{Trabajo futuro}
+
+Como continuación natural se contemplan: integración de las variables categóricas mediante \emph{one-hot encoding} o \emph{Gower distance}; comparación con Gaussian Mixture Models \citep{mclachlan2000gmm} para clusters elípticos con asignación probabilística; visualización no lineal con UMAP o t-SNE; y validación de estabilidad con \emph{bootstrap} y el índice de Jaccard \citep{hennig2007cluster}. En un horizonte más amplio, sería interesante replicar la metodología sobre el dataset \emph{Iris} y sobre \emph{Pima Indians Diabetes} para contrastar dominios.
+
+\section*{Checklist de Ciencia 2.0}
+\addcontentsline{toc}{section}{Checklist de Ciencia 2.0}
+
+\begin{itemize}
+  \item Dataset con licencia abierta (CC-0) y enlace al repositorio oficial.
+  \item Código fuente íntegro en el notebook, sin dependencias propietarias.
+  \item Semillas aleatorias fijadas (\texttt{RANDOM\_STATE=42}).
+  \item \texttt{requirements.txt} con las librerías necesarias y sus versiones mínimas.
+  \item Notebook ejecutable de principio a fin sin intervención manual.
+  \item Reporte en \LaTeX{} con figuras vectoriales y citas verificables.
+  \item Presentación de cinco diapositivas alineada con la rúbrica.
+\end{itemize}

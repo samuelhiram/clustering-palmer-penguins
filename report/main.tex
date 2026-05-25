@@ -1,0 +1,153 @@
+% !TEX root = main.tex
+% !TEX program = pdflatex
+% !TEX spellcheck = es_ES
+\documentclass[12pt,letterpaper]{article}
+
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{newtxtext,newtxmath}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{needspace}
+\usepackage{titlesec}
+\usepackage{etoolbox}
+\usepackage[protrusion=true,expansion=false]{microtype}
+\usepackage[all]{nowidow}
+\usepackage{enumitem}
+\usepackage[section]{placeins}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{caption}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{fancyhdr}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{hyperref}
+\usepackage{natbib}
+\usepackage{csquotes}
+
+\geometry{margin=2.5cm}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue,pdfborder={0 0 0}}
+\setlength{\parskip}{0.6em}
+\setlength{\parindent}{0pt}
+\raggedbottom
+
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc,fit,backgrounds}
+
+% Paleta cromatica del proyecto Mineria de Datos
+\definecolor{dmTeal}{HTML}{0F766E}
+\definecolor{dmInk}{HTML}{172033}
+\definecolor{dmLine}{HTML}{D6DEE8}
+\definecolor{dmMuted}{HTML}{5B667A}
+\definecolor{dmAdelie}{HTML}{1F77B4}
+\definecolor{dmChinstrap}{HTML}{D97706}
+\definecolor{dmGentoo}{HTML}{16A34A}
+\definecolor{dmAccent}{HTML}{0B2E4F}
+
+% Control visual: evita titulos huerfanos, formulas sueltas y cortes torpes.
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\predisplaypenalty=10000
+\postdisplaypenalty=0
+\setlength{\LTpre}{0.25em}
+\setlength{\LTpost}{0.6em}
+\renewcommand{\arraystretch}{1.08}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\titlespacing*{\section}{0pt}{1.2em}{0.55em}
+\titlespacing*{\subsection}{0pt}{0.9em}{0.35em}
+\setlist{topsep=0.25em,itemsep=0.15em,parsep=0pt}
+\pretocmd{\section}{\Needspace{8\baselineskip}}{}{}
+\pretocmd{\subsection}{\Needspace{6\baselineskip}}{}{}
+\pretocmd{\section}{\FloatBarrier}{}{}
+\BeforeBeginEnvironment{longtable}{\Needspace{10\baselineskip}\small}
+\AfterEndEnvironment{longtable}{\normalsize}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  framesep=4pt,
+  rulecolor=\color{dmLine},
+  backgroundcolor=\color{dmLine!10},
+  columns=fullflexible,
+  keywordstyle=\color{dmTeal}\bfseries,
+  commentstyle=\color{dmMuted}\itshape,
+  stringstyle=\color{dmChinstrap},
+  showstringspaces=false,
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\color{dmMuted}Mineria de Datos -- Clustering Palmer Penguins}
+\fancyhead[R]{\footnotesize\color{dmMuted}\leftmark}
+\fancyfoot[C]{\footnotesize\color{dmMuted}\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\title{Clustering No Supervisado del Dataset Palmer Penguins: Comparativa entre K-Means, DBSCAN y Agglomerative}
+\author{Samuel Hiram Castro Martinez}
+\date{26 de Mayo del 2026}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering
+  {\Large Instituto Tecnológico de Tijuana\par}
+  \vspace{0.4cm}
+  {\large Maestría en Ciencias de la Computación\par}
+  \vspace{1.6cm}
+  {\color{dmTeal}\rule{0.7\linewidth}{1pt}\par}
+  \vspace{0.8cm}
+  {\LARGE\bfseries Clustering No Supervisado del Dataset Palmer Penguins: Comparativa entre K-Means, DBSCAN y Agglomerative Clustering\par}
+  \vspace{0.4cm}
+  {\color{dmTeal}\rule{0.7\linewidth}{1pt}\par}
+  \vspace{1.6cm}
+  \begin{tabularx}{0.92\textwidth}{>{\bfseries}r X}
+    Materia: & Minería de Datos\\
+    Profesor: & Dr. Mario Garcia\\
+    Semestre: & Enero -- Junio 2026\\
+    Alumno: & Samuel Hiram Castro Martinez\\
+    Matrícula: & 25210035\\
+    Programa: & Maestría en Ciencias de la Computación\\
+    Proyecto: & Clustering no supervisado sobre Palmer Penguins\\
+    Versión: & 1.0 (notebook reproducible con figuras y métricas integradas)\\
+    Fecha: & 26 de Mayo del 2026
+  \end{tabularx}
+  \vfill
+  \small\color{dmMuted} Reporte elaborado bajo la práctica de Ciencia 2.0: datos públicos con licencia abierta, código fuente reproducible y semillas aleatorias fijadas.\par
+\end{titlepage}
+
+\input{sections/00-resumen-ejecutivo}
+
+\tableofcontents
+\listoffigures
+\listoftables
+\newpage
+
+\input{sections/01-introduccion}
+\input{sections/02-marco-teorico}
+\input{sections/03-metodologia}
+\input{sections/04-experimentos}
+\input{sections/05-resultados}
+\input{sections/06-conclusiones}
+
+\appendix
+\input{sections/A-apendice-codigo}
+\input{sections/B-apendice-reproducibilidad}
+
+\bibliographystyle{apalike}
+\bibliography{references}
+
+\end{document}

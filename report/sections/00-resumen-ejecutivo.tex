@@ -1,0 +1,20 @@
+% !TEX root = ../main.tex
+\section*{Resumen ejecutivo}
+\addcontentsline{toc}{section}{Resumen ejecutivo}
+
+Este documento reporta una investigación corta de minería de datos sobre el dataset \emph{Palmer Penguins} \citep{horst2020palmer,gorman2014ecological}. Se compara la capacidad de tres algoritmos de clustering no supervisado --- K-Means \citep{macqueen1967some}, DBSCAN \citep{ester1996density} y Agglomerative Clustering con linkage de Ward \citep{ward1963hierarchical} --- para recuperar automáticamente la estructura de especies a partir únicamente de las cuatro variables morfométricas del dataset, sin utilizar la etiqueta de especie durante el entrenamiento.
+
+\paragraph{Aportes principales}
+\begin{itemize}
+  \item Flujo de minería de datos completo en un único notebook reproducible: definición del problema, obtención de datos, exploración, preprocesamiento, experimentación, evaluación y conclusiones.
+  \item Comparación cuantitativa de los tres algoritmos con dos métricas complementarias: \emph{Silhouette Score} (interna) y \emph{Adjusted Rand Index} (externa, contra la etiqueta verdadera de especie) \citep{rand1971objective,hubert1985comparing,rousseeuw1987silhouettes}.
+  \item Visualizaciones vectoriales: \emph{pairplot} discriminado por especie, matriz de correlación, método del codo, proyección PCA bidimensional y matriz de confusión.
+  \item Práctica plena de Ciencia 2.0: datos con licencia CC-0, código bajo control de versiones, semillas fijadas (\texttt{RANDOM\_STATE=42}), \texttt{requirements.txt} y notebook ejecutable de principio a fin sin intervención manual.
+\end{itemize}
+
+\paragraph{Resultado del experimento}
+Sobre 333 observaciones limpias del dataset (tras eliminar valores faltantes), \textbf{Agglomerative Clustering con linkage de Ward} obtiene el mejor ajuste a la estructura biológica conocida, con un \emph{Adjusted Rand Index} de \textbf{0.916} y un \emph{Silhouette Score} de 0.454. K-Means queda muy próximo (ARI=0.793) y DBSCAN, pese a maximizar la métrica interna (Silhouette=0.557), fusiona las especies \emph{Adelie} y \emph{Chinstrap} en un único cluster denso y produce 33 puntos catalogados como ruido, lo que penaliza su ARI a 0.584.
+
+\paragraph{Defensibilidad académica}
+El experimento es totalmente reproducible: tanto el notebook como las semillas, los hiperparámetros y los hashes del dataset están versionados en el repositorio del proyecto. La sección~6 incluye la tabla comparativa de métricas y la sección~7 las conclusiones con limitaciones y trabajo futuro. Los apéndices recogen el código fuente esencial y la checklist de reproducibilidad.
+\newpage

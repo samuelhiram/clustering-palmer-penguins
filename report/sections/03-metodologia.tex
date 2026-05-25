@@ -1,0 +1,59 @@
+% !TEX root = ../main.tex
+\section{Metodología}
+
+El experimento sigue el flujo canónico de minería de datos KDD \citep{fayyad1996kdd}, instanciado como una sucesión de siete etapas explícitas que coinciden con las fases solicitadas en el enunciado del proyecto.
+
+\subsection{Pipeline general}
+
+\begin{enumerate}
+  \item \textbf{Definición del problema.} Recuperar la estructura de las tres especies de pingüinos a partir de variables morfométricas, sin supervisión.
+  \item \textbf{Adquisición de los datos.} Descarga del archivo \texttt{penguins.csv} del repositorio oficial \texttt{allisonhorst/palmerpenguins} (CC-0). En el notebook, si el archivo local no existe se obtiene automáticamente vía \texttt{urllib.request}, garantizando ejecución en Google Colab sin pasos manuales.
+  \item \textbf{Análisis exploratorio.} Conteo por especie, \texttt{describe()}, recuento de \texttt{NaN}, matriz de correlación y \emph{pairplot} discriminado por clase.
+  \item \textbf{Preprocesamiento.} Eliminación de filas con \texttt{NaN} en variables numéricas y en \texttt{species}; estandarización de las cuatro variables numéricas con \texttt{StandardScaler}.
+  \item \textbf{Diseño de experimentos.} Aplicación de K-Means ($k=3$, $n_{init}=10$), DBSCAN ($\varepsilon=0.6$, $\text{minPts}=5$) y Agglomerative ($k=3$, linkage=Ward); semilla \texttt{RANDOM\_STATE} = 42 en todos los pasos estocásticos.
+  \item \textbf{Evaluación.} Cálculo de Silhouette Score (excluyendo los puntos de ruido de DBSCAN), Adjusted Rand Index contra la etiqueta verdadera, matriz de confusión del mejor modelo y visualización en el plano PCA.
+  \item \textbf{Conclusiones.} Discusión de los resultados, limitaciones y trabajo futuro.
+\end{enumerate}
+
+\subsection{Pseudocódigo del experimento}
+
+\begin{lstlisting}[language=Python,caption={Pipeline esencial de minería de datos.}]
+RANDOM_STATE = 42
+df = read_csv("data/penguins.csv")
+df_clean = df.dropna(subset=NUM_COLS + ["species"]).reset_index(drop=True)
+X = StandardScaler().fit_transform(df_clean[NUM_COLS])
+y_true = LabelEncoder().fit_transform(df_clean["species"])
+
+models = {
+  "K-Means":       KMeans(n_clusters=3, n_init=10, random_state=RANDOM_STATE),
+  "DBSCAN":        DBSCAN(eps=0.6, min_samples=5),
+  "Agglomerative": AgglomerativeClustering(n_clusters=3, linkage="ward"),
+}
+
+for name, m in models.items():
+    labels = m.fit_predict(X)
+    sil  = silhouette_score(X[labels != -1], labels[labels != -1])
+    ari  = adjusted_rand_score(y_true, labels)
+    log(name, sil, ari)
+\end{lstlisting}
+
+\subsection{Variables del dataset}
+
+La tabla~\ref{tab:variables} resume las variables empleadas en el modelado. Únicamente las cuatro numéricas alimentan los algoritmos; \texttt{species} se reserva como verdad de campo para la métrica externa.
+
+\begin{table}[H]
+\centering
+\caption{Variables del dataset Palmer Penguins consideradas en el experimento.}
+\label{tab:variables}
+\begin{tabularx}{\textwidth}{lXl}
+\toprule
+\textbf{Variable} & \textbf{Descripción} & \textbf{Tipo}\\
+\midrule
+\texttt{bill\_length\_mm}     & Longitud del pico (culmen) en milímetros          & Numérica continua\\
+\texttt{bill\_depth\_mm}      & Profundidad del pico en milímetros                & Numérica continua\\
+\texttt{flipper\_length\_mm}  & Longitud de la aleta en milímetros                & Numérica continua\\
+\texttt{body\_mass\_g}        & Masa corporal en gramos                            & Numérica continua\\
+\texttt{species}              & \emph{Adelie}, \emph{Chinstrap} o \emph{Gentoo}   & Categórica (verdad)\\
+\bottomrule
+\end{tabularx}
+\end{table}

@@ -1,0 +1,47 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {section}{Resumen ejecutivo}{1}{Doc-Start}%
+\contentsline {paragraph}{Aportes principales}{1}{paragraph*.1}%
+\contentsline {paragraph}{Resultado del experimento}{1}{paragraph*.2}%
+\contentsline {paragraph}{Defensibilidad académica}{1}{paragraph*.3}%
+\contentsline {section}{\numberline {1}Introducción}{5}{section.1}%
+\contentsline {section}{\numberline {2}Planteamiento del problema}{5}{section.2}%
+\contentsline {section}{\numberline {3}Objetivo general}{5}{section.3}%
+\contentsline {section}{\numberline {4}Objetivos específicos}{6}{section.4}%
+\contentsline {section}{\numberline {5}Estructura del documento}{6}{section.5}%
+\contentsline {section}{\numberline {6}Marco teórico}{6}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Minería de datos y aprendizaje no supervisado}{6}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}K-Means}{6}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}DBSCAN}{7}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Agglomerative Clustering}{7}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Métricas de evaluación}{7}{subsection.6.5}%
+\contentsline {paragraph}{Silhouette Score \citep {rousseeuw1987silhouettes}.}{7}{paragraph*.4}%
+\contentsline {paragraph}{Adjusted Rand Index \citep {rand1971objective,hubert1985comparing}.}{7}{paragraph*.5}%
+\contentsline {subsection}{\numberline {6.6}Reducción de dimensionalidad por PCA}{8}{subsection.6.6}%
+\contentsline {subsection}{\numberline {6.7}Ciencia 2.0 y reproducibilidad}{8}{subsection.6.7}%
+\contentsline {section}{\numberline {7}Metodología}{8}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Pipeline general}{8}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Pseudocódigo del experimento}{9}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Variables del dataset}{9}{subsection.7.3}%
+\contentsline {section}{\numberline {8}Diseño y ejecución de los experimentos}{9}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Exploración de datos}{10}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Determinación del número de clusters}{11}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Configuración de los algoritmos}{12}{subsection.8.3}%
+\contentsline {section}{\numberline {9}Resultados}{12}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Métricas comparativas}{12}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Visualización de los clusters}{12}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Matriz de confusión del mejor modelo}{13}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Discusión}{13}{subsection.9.4}%
+\contentsline {section}{\numberline {10}Conclusiones}{14}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Aportes del proyecto}{14}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}Limitaciones}{14}{subsection.10.2}%
+\contentsline {subsection}{\numberline {10.3}Trabajo futuro}{15}{subsection.10.3}%
+\contentsline {section}{Checklist de Ciencia 2.0}{15}{subsection.10.3}%
+\contentsline {section}{\numberline {A}Apéndice: código fuente esencial}{15}{appendix.Alph1}%
+\contentsline {subsection}{\numberline {A.1}Carga y preprocesamiento}{15}{subsection.Alph1.1}%
+\contentsline {subsection}{\numberline {A.2}Comparación de algoritmos}{16}{subsection.Alph1.2}%
+\contentsline {section}{\numberline {B}Apéndice: instrucciones de reproducibilidad}{16}{appendix.Alph2}%
+\contentsline {subsection}{\numberline {B.1}Estructura del repositorio}{16}{subsection.Alph2.1}%
+\contentsline {subsection}{\numberline {B.2}Ejecución local}{17}{subsection.Alph2.2}%
+\contentsline {subsection}{\numberline {B.3}Ejecución en Google Colab}{17}{subsection.Alph2.3}%
+\contentsline {subsection}{\numberline {B.4}Compilación del reporte LaTeX}{17}{subsection.Alph2.4}%
+\contentsline {subsection}{\numberline {B.5}Checklist de Ciencia 2.0}{18}{subsection.Alph2.5}%

@@ -1,0 +1,62 @@
+% !TEX root = ../main.tex
+\section{Apéndice: instrucciones de reproducibilidad}
+\label{ap:reproducibilidad}
+
+\subsection{Estructura del repositorio}
+
+\begin{lstlisting}[caption={Disposición de archivos del proyecto.}]
+mineria/
++- notebook.ipynb       Notebook principal (Jupyter / Google Colab)
++- README.md            Resumen del proyecto y guia de ejecucion
++- requirements.txt     Dependencias minimas con version
++- data/
+|  +- penguins.csv      Dataset Palmer Penguins (CC-0)
++- images/              Figuras vectoriales generadas por el notebook
++- presentacion.pptx    Presentacion de 5 diapositivas
++- report/
+   +- main.tex          Reporte LaTeX (este documento)
+   +- sections/         Secciones modulares
+   +- images/           Copia de figuras para el reporte
+   +- references.bib    Bibliografia
+\end{lstlisting}
+
+\subsection{Ejecución local}
+
+\begin{lstlisting}[language=bash,caption={Reproducción del experimento en local.}]
+git clone <repo-url> mineria
+cd mineria
+python -m venv venv
+venv\Scripts\activate              # Windows (en Linux/Mac: source venv/bin/activate)
+pip install -r requirements.txt
+jupyter notebook notebook.ipynb
+\end{lstlisting}
+
+\subsection{Ejecución en Google Colab}
+
+\begin{enumerate}
+  \item Subir \texttt{notebook.ipynb} a Google Drive.
+  \item Abrirlo con Google Colab.
+  \item Ejecutar \texttt{Entorno de ejecución $\rightarrow$ Ejecutar todo}.
+  \item El dataset se descarga automáticamente desde el repositorio oficial si no está disponible localmente.
+\end{enumerate}
+
+\subsection{Compilación del reporte LaTeX}
+
+\begin{lstlisting}[language=bash,caption={Compilación del PDF en el directorio report/.}]
+cd report
+pdflatex main.tex
+bibtex main
+pdflatex main.tex
+pdflatex main.tex
+\end{lstlisting}
+
+\subsection{Checklist de Ciencia 2.0}
+
+\begin{itemize}
+  \item[\checkmark] Datos abiertos con licencia CC-0 y enlace al repositorio fuente.
+  \item[\checkmark] Código abierto en notebook y scripts auxiliares.
+  \item[\checkmark] Semillas aleatorias fijadas (\texttt{RANDOM\_STATE} = 42).
+  \item[\checkmark] Dependencias declaradas con versiones mínimas (\texttt{requirements.txt}).
+  \item[\checkmark] Notebook ejecutable de principio a fin sin pasos manuales.
+  \item[\checkmark] Reporte LaTeX y presentación generados a partir de los mismos resultados.
+\end{itemize}

@@ -1,0 +1,56 @@
+% !TEX root = ../main.tex
+\section{Apéndice: código fuente esencial}
+\label{ap:codigo}
+
+Este apéndice contiene los fragmentos esenciales de Python que reproducen el experimento de principio a fin. El notebook completo se encuentra en \texttt{notebook.ipynb} dentro del repositorio del proyecto.
+
+\subsection{Carga y preprocesamiento}
+
+\begin{lstlisting}[language=Python,caption={Carga, limpieza y estandarización del dataset.}]
+import os, urllib.request
+import pandas as pd
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+
+RANDOM_STATE = 42
+NUM_COLS = ["bill_length_mm", "bill_depth_mm",
+            "flipper_length_mm", "body_mass_g"]
+
+DATA_URL = ("https://raw.githubusercontent.com/allisonhorst/"
+            "palmerpenguins/main/inst/extdata/penguins.csv")
+LOCAL_PATH = "data/penguins.csv"
+
+if not os.path.exists(LOCAL_PATH):
+    os.makedirs("data", exist_ok=True)
+    urllib.request.urlretrieve(DATA_URL, LOCAL_PATH)
+
+df = pd.read_csv(LOCAL_PATH)
+df_clean = df.dropna(subset=NUM_COLS + ["species"]).reset_index(drop=True)
+
+X = StandardScaler().fit_transform(df_clean[NUM_COLS])
+y_true = LabelEncoder().fit_transform(df_clean["species"])
+\end{lstlisting}
+
+\subsection{Comparación de algoritmos}
+
+\begin{lstlisting}[language=Python,caption={Ajuste y evaluación de los tres modelos.}]
+import numpy as np
+from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
+from sklearn.metrics import silhouette_score, adjusted_rand_score
+
+models = {
+    "K-Means":       KMeans(n_clusters=3, n_init=10,
+                            random_state=RANDOM_STATE),
+    "DBSCAN":        DBSCAN(eps=0.6, min_samples=5),
+    "Agglomerative": AgglomerativeClustering(n_clusters=3,
+                                             linkage="ward"),
+}
+
+for name, m in models.items():
+    labels = m.fit_predict(X)
+    mask = labels != -1
+    sil = (silhouette_score(X[mask], labels[mask])
+           if len(set(labels[mask])) > 1 else np.nan)
+    ari = adjusted_rand_score(y_true, labels)
+    n_noise = int((labels == -1).sum())
+    print(f"{name:15s}  sil={sil:.3f}  ari={ari:.3f}  ruido={n_noise}")
+\end{lstlisting}
