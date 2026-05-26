@@ -268,7 +268,7 @@ md("""## 7. Conclusiones
 - **DBSCAN** con `eps=0.6` tiende a fusionar *Adelie* y *Chinstrap* en un único cluster denso y marca algunos puntos como ruido (etiqueta `-1`). Su ARI es menor porque el dataset no presenta densidades muy distintas.
 
 ### Limitaciones
-- El dataset es pequeño (≈ 333 filas tras limpieza); las métricas son sensibles a la partición.
+- El dataset es pequeño (≈ 342 filas tras limpieza); las métricas son sensibles a la partición.
 - Solo usamos 4 variables numéricas. Incluir `sex` e `island` (encoding categórico) podría mejorar la separación entre *Adelie* y *Chinstrap*.
 - DBSCAN es muy sensible a `eps`; una búsqueda más fina con la curva k-distance podría mejorarlo.
 
