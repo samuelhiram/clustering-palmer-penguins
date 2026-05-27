@@ -1,4 +1,4 @@
-% !TEX root = ../main.tex
+% !TEX root = ../reporte_final.tex
 \section{Apéndice: instrucciones de reproducibilidad}
 \label{ap:reproducibilidad}
 
@@ -14,7 +14,7 @@ mineria/
 +- images/              Figuras vectoriales generadas por el notebook
 +- presentacion.pptx    Presentacion de 5 diapositivas
 +- report/
-   +- main.tex          Reporte LaTeX (este documento)
+   +- reporte_final.tex Reporte LaTeX (este documento)
    +- sections/         Secciones modulares
    +- images/           Copia de figuras para el reporte
    +- references.bib    Bibliografia
@@ -44,10 +44,10 @@ jupyter notebook notebook.ipynb
 
 \begin{lstlisting}[language=bash,caption={Compilación del PDF en el directorio report/.}]
 cd report
-pdflatex main.tex
-bibtex main
-pdflatex main.tex
-pdflatex main.tex
+pdflatex reporte_final.tex
+bibtex reporte_final
+pdflatex reporte_final.tex
+pdflatex reporte_final.tex
 \end{lstlisting}
 
 \subsection{Checklist de Ciencia 2.0}
