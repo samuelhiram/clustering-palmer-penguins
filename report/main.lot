@@ -1,4 +1,5 @@
 \babel@toc {spanish}{}\relax 
-\contentsline {table}{\numberline {1}{\ignorespaces Variables del dataset Palmer Penguins consideradas en el experimento.}}{9}{table.caption.6}%
-\contentsline {table}{\numberline {2}{\ignorespaces Hiperparámetros de los algoritmos comparados.}}{12}{table.caption.10}%
-\contentsline {table}{\numberline {3}{\ignorespaces Métricas de clustering --- mayor es mejor en ambas columnas.}}{12}{table.caption.11}%
+\setlength {\parskip }{0pt}
+\contentsline {table}{\numberline {1}{\ignorespaces Variables del dataset Palmer Penguins consideradas en el experimento.}}{8}{table.caption.6}%
+\contentsline {table}{\numberline {2}{\ignorespaces Hiperparámetros de los algoritmos comparados.}}{11}{table.caption.10}%
+\contentsline {table}{\numberline {3}{\ignorespaces Métricas de clustering --- mayor es mejor en ambas columnas.}}{11}{table.caption.11}%

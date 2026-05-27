@@ -208,6 +208,8 @@ add_text(s, Inches(0.4), Inches(4.0), Inches(5.6), Inches(0.5),
          "Observaciones", size=18, bold=True, color=TEAL)
 add_bullets(s, Inches(0.4), Inches(4.5), Inches(5.6), Inches(3.0), [
     "Agglomerative recupera mejor las 3 especies (ARI = 0.92).",
+    "Tras mapear cluster → especie por mayoría: exactitud 96.8 % (331/342).",
+    "Mapeo: Cluster 0 → Adelie, Cluster 1 → Gentoo, Cluster 2 → Chinstrap.",
     "DBSCAN tiene mejor compacidad interna pero fusiona Adelie/Chinstrap.",
     "K-Means es muy competitivo y mucho más rápido.",
 ], size=15)
@@ -230,7 +232,7 @@ add_bullets(s, Inches(0.6), Inches(1.65), Inches(12), Inches(1.3), [
 add_text(s, Inches(0.4), Inches(3.2), Inches(12.5), Inches(0.5),
          "Limitaciones", size=20, bold=True, color=TEAL)
 add_bullets(s, Inches(0.6), Inches(3.75), Inches(12), Inches(1.3), [
-    "Solo 4 variables numéricas y dataset pequeño (~333 filas tras limpieza).",
+    "Solo 4 variables numéricas y dataset pequeño (342 filas tras limpieza).",
     "DBSCAN es muy sensible al parámetro eps.",
 ], size=16)
 

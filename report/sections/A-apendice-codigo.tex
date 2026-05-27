@@ -30,6 +30,9 @@ X = StandardScaler().fit_transform(df_clean[NUM_COLS])
 y_true = LabelEncoder().fit_transform(df_clean["species"])
 \end{lstlisting}
 
+% Reservamos espacio para subsection + listing 3 completo, evitando
+% que el titulo A.2 quede huerfano al pie de la pagina previa.
+\Needspace{28\baselineskip}
 \subsection{Comparación de algoritmos}
 
 \begin{lstlisting}[language=Python,caption={Ajuste y evaluación de los tres modelos.}]

@@ -54,25 +54,139 @@
 \definecolor{dmGentoo}{HTML}{16A34A}
 \definecolor{dmAccent}{HTML}{0B2E4F}
 
-% Control visual: evita titulos huerfanos, formulas sueltas y cortes torpes.
-\clubpenalty=10000
-\widowpenalty=10000
-\displaywidowpenalty=10000
-\predisplaypenalty=10000
-\postdisplaypenalty=0
+% =====================================================================
+%  CONTROL DE SALTOS DE PAGINA (estandar academico, totalmente automatico)
+%  Objetivo: ningun parrafo, titulo de seccion, lista o figura se rompa
+%  visualmente mal entre paginas. La combinacion de penalizaciones y de
+%  \Needspace antes de cada titulo garantiza que el motor de LaTeX:
+%    1. Nunca deje viudas (ultima linea de un parrafo en pagina nueva).
+%    2. Nunca deje huerfanos (1ra linea de un parrafo al pie de pagina).
+%    3. Nunca rompa una palabra con guion al final de pagina.
+%    4. Nunca coloque un titulo de seccion en las ultimas lineas de
+%       la pagina sin al menos N lineas de contenido debajo.
+%    5. No separe figuras/listas/displays de su contexto.
+%  La tolerancia tipografica adicional evita overfull cuando las
+%  penalizaciones altas obligan a recomponer parrafos.
+% =====================================================================
+
+% --- (1) Penalizaciones de ruptura ---
+\clubpenalty=10000                  % huerfano: 1ra linea de parrafo al pie
+\widowpenalty=10000                 % viuda: ultima linea de parrafo en cima
+\displaywidowpenalty=10000          % idem para entornos display
+\predisplaypenalty=10000            % no romper inmediatamente antes de un display
+\postdisplaypenalty=0               % permitir respirar tras un display
+\brokenpenalty=10000                % no romper pagina en linea con guion
+\interlinepenalty=200               % suave: desincentiva ruptura en mitad de parrafo
+
+% --- (2) Espaciado de titulos (titlesec) ---
+\titlespacing*{\section}{0pt}{1.4em}{0.6em}
+\titlespacing*{\subsection}{0pt}{1.0em}{0.4em}
+\titlespacing*{\subsubsection}{0pt}{0.8em}{0.3em}
+
+% --- (3) \Needspace antes de cada titulo ---
+% Si quedan menos lineas que el umbral, el motor fuerza un salto de pagina
+% ANTES del titulo, garantizando que cada seccion arranque con suficiente
+% contenido visible debajo (evita titulos huerfanos al pie de pagina).
+\pretocmd{\section}{\Needspace{14\baselineskip}}{}{}
+\pretocmd{\subsection}{\Needspace{9\baselineskip}}{}{}
+\pretocmd{\subsubsection}{\Needspace{7\baselineskip}}{}{}
+\pretocmd{\paragraph}{\Needspace{5\baselineskip}}{}{}
+
+% --- (4) Barrera de flotantes por seccion (placeins ya cargado) ---
+% Refuerza que las figuras no migren a la siguiente seccion.
+\pretocmd{\section}{\FloatBarrier}{}{}
+
+% --- (5) Listas: forzar que el primer item siga al texto introductorio ---
+\AtBeginEnvironment{itemize}{\par\nopagebreak}
+\AtBeginEnvironment{enumerate}{\par\nopagebreak}
+\AtBeginEnvironment{description}{\par\nopagebreak}
+
+% --- (6) Tolerancia tipografica ---
+% Con penalizaciones tan altas, el motor puede no encontrar saltos validos
+% y generar overfull boxes. Aflojamos la tolerancia y damos margen de
+% estiramiento de emergencia para que recomponga parrafos sin desbordes.
+\tolerance=600
+\emergencystretch=3em
+
+% --- (7) Tablas y longtable ---
 \setlength{\LTpre}{0.25em}
 \setlength{\LTpost}{0.6em}
 \renewcommand{\arraystretch}{1.08}
 \newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
 \newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
-\titlespacing*{\section}{0pt}{1.2em}{0.55em}
-\titlespacing*{\subsection}{0pt}{0.9em}{0.35em}
 \setlist{topsep=0.25em,itemsep=0.15em,parsep=0pt}
-\pretocmd{\section}{\Needspace{8\baselineskip}}{}{}
-\pretocmd{\subsection}{\Needspace{6\baselineskip}}{}{}
-\pretocmd{\section}{\FloatBarrier}{}{}
 \BeforeBeginEnvironment{longtable}{\Needspace{10\baselineskip}\small}
 \AfterEndEnvironment{longtable}{\normalsize}
+
+% --- (7b) Listings de codigo ---
+% Los bloques lstlisting pueden romperse entre paginas si no hay espacio
+% suficiente, dejando codigo cortado a la mitad (poco profesional en
+% reportes academicos). Reservamos al menos 14 lineas de pagina antes
+% de emitir un listing: si quedan menos, el motor lo empuja a la pagina
+% siguiente, garantizando que el listing inicie limpio.
+\BeforeBeginEnvironment{lstlisting}{\par\Needspace{14\baselineskip}}
+
+% --- (8) Control de saltos dentro del INDICE (\tableofcontents) ---
+% Problema: el motor de LaTeX puede romper el TOC entre una seccion y sus
+% subsecciones porque la glue entre entradas es un candidato libre de
+% ruptura. Solucion en tres frentes (ninguno basta por si solo):
+%   (a) Reducir el espaciado vertical entre entradas de seccion en el TOC
+%       de 1.0em a 0.4em, asi entran mas entradas por pagina (compresion).
+%   (b) Anular \parskip dentro del TOC: elimina la glue \par que separa
+%       entradas y que era el principal candidato de ruptura.
+%   (c) Redefinir \l@section para emitir \penalty\@highpenalty AL FINAL
+%       de cada entrada de seccion, prohibiendo el salto inmediato.
+%   (d) Inyectar \nobreak antes de cada subseccion como refuerzo.
+\makeatletter
+% Reglas TeX de ruptura en vmode:
+%   - Una glue es punto de ruptura valido SOLO si el nodo previo no es
+%     descartable (penalty/glue son descartables; cajas/rules no).
+%   - penalty -10000 = ruptura FORZADA (no la queremos). Usamos \@secpenalty
+%     (=-300) que es la convencion academica para "preferir romper aqui".
+%   - penalty +10000 = ruptura PROHIBIDA en ese nodo (la queremos tras el
+%     titulo de seccion para mantenerlo pegado a sus subsecciones).
+% Para que la penalty alta sea efectiva:
+%   1) \removelastskip elimina la glue residual de \par.
+%   2) \penalty\@M crea un nodo de penalty alta.
+%   3) La glue inicial de la siguiente subseccion (precedida por penalty)
+%      deja de ser candidata por la regla "glue tras descartable no rompe".
+\renewcommand*\l@section[2]{%
+  \ifnum \c@tocdepth >\z@
+    \addpenalty{\@secpenalty}%
+    \addvspace{0.3em \@plus\p@}%
+    \setlength\@tempdima{1.5em}%
+    \begingroup
+      \parindent \z@ \rightskip \@pnumwidth
+      \parfillskip -\@pnumwidth
+      \parskip \z@
+      \leavevmode \bfseries
+      \advance\leftskip\@tempdima
+      \hskip -\leftskip
+      #1\nobreak\hfil \nobreak\hb@xt@\@pnumwidth{\hss #2}\par
+      \removelastskip
+      \penalty\@M
+    \endgroup
+  \fi}
+% Subsecciones: penalty alta antes (mantiene cohesion con la seccion
+% padre) y despues (entre subsecciones consecutivas no se rompe).
+\let\dm@old@l@subsection\l@subsection
+\renewcommand*{\l@subsection}[2]{%
+  \removelastskip\penalty\@M
+  \begingroup\parskip\z@\dm@old@l@subsection{#1}{#2}\removelastskip\penalty\@M\endgroup}
+\let\dm@old@l@subsubsection\l@subsubsection
+\renewcommand*{\l@subsubsection}[2]{%
+  \removelastskip\penalty\@M
+  \begingroup\parskip\z@\dm@old@l@subsubsection{#1}{#2}\removelastskip\penalty\@M\endgroup}
+\makeatother
+% Eliminar parskip en el TOC entero (refuerza la solucion: sin parskip,
+% no hay glue entre entradas, asi que tampoco hay candidatos de ruptura
+% adicionales).
+\AtBeginDocument{%
+  \addtocontents{toc}{\protect\setlength{\protect\parskip}{0pt}}%
+  \addtocontents{lof}{\protect\setlength{\protect\parskip}{0pt}}%
+  \addtocontents{lot}{\protect\setlength{\protect\parskip}{0pt}}%
+}
+% =====================================================================
 
 \lstset{
   basicstyle=\ttfamily\small,
@@ -147,7 +261,24 @@
 \input{sections/A-apendice-codigo}
 \input{sections/B-apendice-reproducibilidad}
 
+% --- Bibliografia ---
+% Las penalizaciones globales (clubpenalty/widowpenalty=10000) y el
+% raggedbottom hacen que cualquier entrada de 2 lineas que no quepa
+% completa se mueva entera a la pagina siguiente, dejando huecos
+% grandes al final de pagina. En la bibliografia esto es indeseable
+% porque cada \bibitem es un parrafo independiente y es preferible
+% que una entrada larga se parta entre paginas a dejar 5+ cm de hueco.
+% Solucion: arrancar en pagina nueva, apretar bibsep y permitir que
+% las entradas se rompan internamente (penalizaciones bajas localmente).
+\clearpage
+\begingroup
+\setlength{\bibsep}{0.45em plus 0.1em minus 0.05em}
+\clubpenalty=150
+\widowpenalty=150
+\interlinepenalty=0
+\raggedbottom
 \bibliographystyle{apalike}
 \bibliography{references}
+\endgroup
 
 \end{document}

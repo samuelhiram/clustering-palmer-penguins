@@ -245,17 +245,33 @@ plt.savefig(\"images/clusters_pca.png\", dpi=120, bbox_inches=\"tight\")
 plt.show()""")
 
 code("""# Matriz de confusión del mejor algoritmo (en ARI)
+# Como el clustering es no supervisado, las IDs de cluster son arbitrarias.
+# Reasignamos cada cluster a la especie mayoritaria que contiene (voto de mayoría)
+# para que la diagonal de la matriz refleje los aciertos reales.
 best = results_df[\"ARI\"].idxmax()
 print(f\"Mejor algoritmo según ARI: {best}\")
 
-cm = confusion_matrix(y_true_num, labels[best])
-plt.figure(figsize=(5, 4))
+best_labels = labels[best]
+cluster_to_species = {}
+for c in np.unique(best_labels):
+    if c == -1:  # ruido de DBSCAN
+        continue
+    cluster_to_species[c] = np.bincount(y_true_num[best_labels == c]).argmax()
+print(\"Mapeo cluster → especie (mayoría):\",
+      {int(k): le.classes_[v] for k, v in cluster_to_species.items()})
+
+y_pred = np.array([cluster_to_species.get(c, -1) for c in best_labels])
+mask_valid = y_pred != -1
+cm = confusion_matrix(y_true_num[mask_valid], y_pred[mask_valid])
+accuracy = np.trace(cm) / cm.sum()
+print(f\"Exactitud (accuracy): {accuracy:.1%}\")
+
+plt.figure(figsize=(5.5, 4.5))
 sns.heatmap(cm, annot=True, fmt=\"d\", cmap=\"Blues\",
-            xticklabels=[f\"Cluster {i}\" for i in range(cm.shape[1])],
-            yticklabels=le.classes_)
-plt.title(f\"Matriz de confusión — {best}\")
+            xticklabels=le.classes_, yticklabels=le.classes_)
+plt.title(f\"Matriz de confusión — {best} (Exactitud: {accuracy:.1%})\")
 plt.ylabel(\"Especie verdadera\")
-plt.xlabel(\"Cluster asignado\")
+plt.xlabel(\"Especie predicha (cluster → especie por mayoría)\")
 plt.tight_layout()
 plt.savefig(\"images/confusion.png\", dpi=120, bbox_inches=\"tight\")
 plt.show()""")
@@ -264,11 +280,12 @@ plt.show()""")
 md("""## 7. Conclusiones
 
 ### ¿Qué funcionó mejor?
-- **K-Means** y **Agglomerative (ward)** recuperan la estructura de las 3 especies con un ARI alto (≈ 0.8) y un Silhouette competitivo. Ambos asumen clusters convexos, lo cual encaja con la geometría de este dataset tras estandarización.
+- **Agglomerative (ward)** es el mejor: ARI ≈ 0.92 y, tras mapear cada cluster a su especie mayoritaria, alcanza una **exactitud ≈ 96.7 %** contra la etiqueta verdadera (sólo 11 *Chinstrap* se asignan al cluster de *Adelie*; *Gentoo* se separa sin error).
+- **K-Means** también recupera la estructura de las 3 especies con un ARI alto (≈ 0.79) y un Silhouette competitivo. Tanto K-Means como Agglomerative asumen clusters convexos, lo cual encaja con la geometría de este dataset tras estandarización.
 - **DBSCAN** con `eps=0.6` tiende a fusionar *Adelie* y *Chinstrap* en un único cluster denso y marca algunos puntos como ruido (etiqueta `-1`). Su ARI es menor porque el dataset no presenta densidades muy distintas.
 
 ### Limitaciones
-- El dataset es pequeño (≈ 333 filas tras limpieza); las métricas son sensibles a la partición.
+- El dataset es pequeño (342 filas tras limpieza); las métricas son sensibles a la partición.
 - Solo usamos 4 variables numéricas. Incluir `sex` e `island` (encoding categórico) podría mejorar la separación entre *Adelie* y *Chinstrap*.
 - DBSCAN es muy sensible a `eps`; una búsqueda más fina con la curva k-distance podría mejorarlo.
 

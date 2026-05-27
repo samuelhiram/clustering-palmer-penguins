@@ -3,7 +3,7 @@
 
 \subsection{Métricas comparativas}
 
-La tabla~\ref{tab:resultados} reporta el Silhouette Score y el Adjusted Rand Index obtenidos por cada algoritmo sobre las 333 observaciones limpias. Los valores son reproducibles a partir del notebook con \texttt{RANDOM\_STATE} = 42.
+La tabla~\ref{tab:resultados} reporta el Silhouette Score y el Adjusted Rand Index obtenidos por cada algoritmo sobre las 342 observaciones limpias. Los valores son reproducibles a partir del notebook con \texttt{RANDOM\_STATE} = 42.
 
 \begin{table}[H]
 \centering
@@ -27,18 +27,20 @@ La figura~\ref{fig:pca} muestra la proyección PCA bidimensional. La primera com
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{images/clusters_pca.png}
-\caption{Proyección PCA 2D de las 333 observaciones. De izquierda a derecha: etiqueta verdadera de especie, K-Means, DBSCAN y Agglomerative. El ARI consignado en el título de cada panel corresponde al modelo correspondiente.}
+\caption{Proyección PCA 2D de las 342 observaciones. De izquierda a derecha: etiqueta verdadera de especie, K-Means, DBSCAN y Agglomerative. El ARI consignado en el título de cada panel corresponde al modelo correspondiente.}
 \label{fig:pca}
 \end{figure}
 
 \subsection{Matriz de confusión del mejor modelo}
 
-Dado que Agglomerative obtiene el mayor ARI, se reporta su matriz de confusión contra la verdad de campo. La figura~\ref{fig:confmat} muestra que los clusters numéricos asignados por el algoritmo se corresponden con las tres especies con un error de asignación pequeño concentrado en la frontera \emph{Adelie}/\emph{Chinstrap}.
+Dado que Agglomerative obtiene el mayor ARI, se reporta su matriz de confusión contra la verdad de campo. Como el clustering es no supervisado, las IDs de cluster (0, 1, 2) son arbitrarias: para evaluar exactitud se reasigna cada cluster a la especie mayoritaria que contiene (\emph{voto de mayoría}). En este experimento el mapeo natural es Cluster~0~$\to$~\emph{Adelie}, Cluster~1~$\to$~\emph{Gentoo} y Cluster~2~$\to$~\emph{Chinstrap}.
+
+Con ese mapeo, la matriz de confusión (figura~\ref{fig:confmat}) muestra una diagonal dominante: 151~de~151 \emph{Adelie}, 123~de~123 \emph{Gentoo} y 57~de~68 \emph{Chinstrap} quedan correctamente asignadas. Sólo 11 ejemplares de \emph{Chinstrap} se confunden con \emph{Adelie}, lo que arroja una \textbf{exactitud global del 96.8\,\%} ($331/342$). El error residual se concentra, como anticipaba el \emph{pairplot}, en la frontera \emph{Adelie}/\emph{Chinstrap}, donde la masa corporal y la longitud de la aleta solapan.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.6\linewidth]{images/confusion.png}
-\caption{Matriz de confusión de Agglomerative Clustering (linkage=Ward) contra la etiqueta verdadera de especie. El emparejamiento cluster--especie es directo y reproduce la estructura biológica.}
+\caption{Matriz de confusión de Agglomerative Clustering (linkage=Ward) tras mapear cada cluster a su especie mayoritaria. Diagonal: aciertos; fila \emph{Chinstrap}, columna \emph{Adelie}: 11 ejemplares confundidos. Exactitud global: 96.8\,\%.}
 \label{fig:confmat}
 \end{figure}
 

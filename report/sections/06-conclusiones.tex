@@ -1,7 +1,7 @@
 % !TEX root = ../main.tex
 \section{Conclusiones}
 
-Se aplicó un flujo completo de minería de datos sobre el dataset Palmer Penguins comparando tres algoritmos de clustering no supervisado. La hipótesis inicial --- que algoritmos sensibles a la geometría global recuperarían mejor la estructura biológica que algoritmos basados en densidad --- queda confirmada por las métricas: Agglomerative Clustering con linkage de Ward obtiene un ARI de 0.916, K-Means un ARI de 0.793 y DBSCAN un ARI de 0.584.
+Se aplicó un flujo completo de minería de datos sobre el dataset Palmer Penguins comparando tres algoritmos de clustering no supervisado. La hipótesis inicial --- que algoritmos sensibles a la geometría global recuperarían mejor la estructura biológica que algoritmos basados en densidad --- queda confirmada por las métricas: Agglomerative Clustering con linkage de Ward obtiene un ARI de 0.916 y, tras mapear cada cluster a su especie mayoritaria (Cluster~0~$\to$~\emph{Adelie}, Cluster~1~$\to$~\emph{Gentoo}, Cluster~2~$\to$~\emph{Chinstrap}), una exactitud del 96.8\,\% contra la verdad de campo; K-Means logra ARI 0.793 y DBSCAN, 0.584.
 
 El dataset resultó ideal para el ejercicio docente: tamaño manejable, tres especies bien definidas, presencia controlada de valores faltantes y suficiente solapamiento entre \emph{Adelie} y \emph{Chinstrap} como para que los algoritmos tengan que esforzarse. La estandarización previa de las cuatro variables fue clave; sin ella, \texttt{body\_mass\_g} (en gramos) dominaría las distancias frente a \texttt{bill\_depth\_mm} (en milímetros).
 
